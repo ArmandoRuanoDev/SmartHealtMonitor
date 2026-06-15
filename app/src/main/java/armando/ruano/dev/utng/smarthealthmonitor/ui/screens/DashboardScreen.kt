@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,10 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import armando.ruano.dev.utng.smarthealthmonitor.data.models.LecturaFC
 import armando.ruano.dev.utng.smarthealthmonitor.data.models.MockData
+import armando.ruano.dev.utng.smarthealthmonitor.data.models.SmartHealthRepository
 import armando.ruano.dev.utng.smarthealthmonitor.ui.components.FilaHistorial
 import armando.ruano.dev.utng.smarthealthmonitor.ui.components.TarjetaDato
 import armando.ruano.dev.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
 import armando.ruano.dev.utng.smarthealthmonitor.ui.viewModel.DashboardViewModel
+import armando.ruano.dev.utng.smarthealthmonitor.BuildConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,6 +118,23 @@ fun DashboardScreen(
                         }
                     }
                 }
+                item {
+                    // Botón de simulación — SOLO PARA DEBUG
+                    if (BuildConfig.DEBUG) {
+                        OutlinedButton(
+                            onClick = {
+                                // Simular lectura del wearable
+                                val fcSimulado = (60..110).random()
+                                SmartHealthRepository.actualizarFC(fcSimulado)
+                                SmartHealthRepository.actualizarPasos((3000..8000).random())
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Simular dato del wearable (DEBUG)")
+                        }
+                    }
+                }
+
                 // ── Lista del historial ───────────────────
                 items(historial, key = { it.id }) { lectura ->
                     FilaHistorial(lectura = lectura)
