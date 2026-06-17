@@ -1,0 +1,61 @@
+package armando.ruano.dev.utng.wear
+
+import android.content.Context
+import androidx.health.services.client.HealthServices
+import androidx.health.services.client.PassiveListenerService
+import androidx.health.services.client.data.DataPointContainer
+import androidx.health.services.client.data.DataType
+import androidx.health.services.client.data.PassiveListenerConfig
+import androidx.health.services.client.data.SampleDataPoint
+import androidx.health.services.client.data.DataType.Companion.HEART_RATE_BPM
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.guava.await
+
+class HealthDataService : PassiveListenerService() {
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private lateinit var wearDataSender: WearDataSender
+
+    override fun onCreate() {
+        super.onCreate()
+        wearDataSender = WearDataSender(this)  // S6: MessageClient
+    }
+
+    override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
+        val fcDataPoints = dataPoints.getData(DataType.HEART_RATE_BPM)
+
+        fcDataPoints.forEach { dataPoint ->
+            if (dataPoint is SampleDataPoint<Double>) {
+                val bpm = dataPoint.value.toInt()
+                scope.launch { wearDataSender.enviarFC(bpm) }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
+
+    companion object {
+        suspend fun registrar(context: Context) {
+            val hsClient = HealthServices.getClient(context)
+            val passiveClient = hsClient.passiveMonitoringClient
+
+            val config = PassiveListenerConfig.builder()
+                .setDataTypes(setOf(DataType.HEART_RATE_BPM))
+                .setShouldUserActivityInfoBeRequested(true)
+                .build()
+
+            passiveClient.setPassiveListenerServiceAsync(
+                HealthDataService::class.java,
+                config
+            ).await()
+        }
+    }
+}
