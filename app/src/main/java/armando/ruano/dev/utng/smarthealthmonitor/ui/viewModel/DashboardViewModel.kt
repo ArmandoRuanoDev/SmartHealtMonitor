@@ -2,8 +2,9 @@ package armando.ruano.dev.utng.smarthealthmonitor.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import armando.ruano.dev.utng.smarthealthmonitor.data.SmartHealthRepository
+import armando.ruano.dev.utng.smarthealthmonitor.data.db.LecturaFC
 import armando.ruano.dev.utng.smarthealthmonitor.data.models.MockData
-import armando.ruano.dev.utng.smarthealthmonitor.data.models.SmartHealthRepository
 import kotlinx.coroutines.flow.*
 class DashboardViewModel : ViewModel() {
 

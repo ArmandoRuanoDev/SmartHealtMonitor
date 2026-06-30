@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -29,9 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import armando.ruano.dev.utng.smarthealthmonitor.data.models.LecturaFC
-import armando.ruano.dev.utng.smarthealthmonitor.data.models.MockData
-import armando.ruano.dev.utng.smarthealthmonitor.data.models.SmartHealthRepository
 import armando.ruano.dev.utng.smarthealthmonitor.ui.components.FilaHistorial
 import armando.ruano.dev.utng.smarthealthmonitor.ui.components.TarjetaDato
 import armando.ruano.dev.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
@@ -117,16 +113,6 @@ fun DashboardScreen(
                         TextButton(onClick = onHistorialClick) {
                             Text("Ver todo")
                         }
-                    }
-                }
-                item {
-                    Button(
-                        onClick = {
-                            armando.ruano.dev.utng.smarthealthmonitor.data.models.SmartHealthRepository.actualizarFC(120)
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("TEST: Simular FC 120")
                     }
                 }
 
