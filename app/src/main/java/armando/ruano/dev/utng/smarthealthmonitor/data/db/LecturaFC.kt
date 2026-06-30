@@ -12,8 +12,6 @@ data class LecturaFC(
     val id: Int = 0,
     val valorBpm: Int,
     val timestamp: Long = System.currentTimeMillis(),
-    val hora: String = SimpleDateFormat(
-        "HH:mm", Locale.getDefault())
-        .format(Date()),
-    val esNormal: Boolean = valorBpm in 60..100
+    val hora: String,
+    val esNormal: Boolean = false
 )

@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * Repositorio singleton que centraliza los datos de salud.
@@ -19,6 +22,12 @@ object SmartHealthRepository {
     private val _fcFlow = MutableStateFlow(0)
     val fcFlow: StateFlow<Int> = _fcFlow.asStateFlow()
 
+    private val _pasosFlow = MutableStateFlow(0)
+    val pasosFlow: StateFlow<Int> = _pasosFlow.asStateFlow()
+
+    fun actualizarPasos(pasos: Int) {
+        _pasosFlow.value = pasos
+    }
     private var dao: LecturaFCDao? = null
 
     fun init(context: Context) {
@@ -27,8 +36,8 @@ object SmartHealthRepository {
 
     suspend fun actualizarFC(bpm: Int) {
         _fcFlow.value = bpm
-        // Persistir en Room automáticamente
-        dao?.insertar(LecturaFC(valorBpm = bpm))
+        val horaActual = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+        dao?.insertar(LecturaFC(valorBpm = bpm, hora = horaActual, esNormal = bpm in 60..100))
     }
 
     // Flow del historial desde Room

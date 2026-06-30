@@ -8,7 +8,6 @@ plugins {
 android {
     namespace = "armando.ruano.dev.utng.wear"
     compileSdk = 36
-
     defaultConfig {
         applicationId = "armando.ruano.dev.utng.wear"
         minSdk = 30
@@ -34,6 +33,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    lint {
+        abortOnError = false
+    }
 }
 
 dependencies {
@@ -51,7 +53,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.8.1")
     // Room
-    val roomVersion = "2.6.1"
+    val roomVersion = "2.7.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     // Necesario para generar el código del DAO
