@@ -14,20 +14,22 @@ class WearListenerService : WearableListenerService() {
     }
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
-        val data   = String(messageEvent.data)
-        val path   = messageEvent.path
-        Log.d(TAG, "Mensaje recibido: path=$path, data=$data")
+        val data = String(messageEvent.data)
+        val path = messageEvent.path
+        // Este log debe aparecer cuando el reloj envía datos
+        Log.d("HEALTH_TEST", "TELÉFONO recibió: path=$path, data=$data")
 
         when (path) {
             PATH_FC -> {
                 val bpm = data.toIntOrNull() ?: return
+                Log.d("HEALTH_TEST", "TELÉFONO actualizando FC: $bpm")
                 SmartHealthRepository.actualizarFC(bpm)
             }
             PATH_PASOS -> {
                 val pasos = data.toIntOrNull() ?: return
                 SmartHealthRepository.actualizarPasos(pasos)
             }
-            else -> Log.w(TAG, "Path desconocido: $path")
+            else -> Log.w("HEALTH_TEST", "Path desconocido: $path")
         }
     }
 }

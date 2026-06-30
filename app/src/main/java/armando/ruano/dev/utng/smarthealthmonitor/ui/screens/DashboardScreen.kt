@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -119,21 +120,16 @@ fun DashboardScreen(
                     }
                 }
                 item {
-                    // Botón de simulación — SOLO PARA DEBUG
-                    if (BuildConfig.DEBUG) {
-                        OutlinedButton(
-                            onClick = {
-                                // Simular lectura del wearable
-                                val fcSimulado = (60..110).random()
-                                SmartHealthRepository.actualizarFC(fcSimulado)
-                                SmartHealthRepository.actualizarPasos((3000..8000).random())
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Simular dato del wearable (DEBUG)")
-                        }
+                    Button(
+                        onClick = {
+                            armando.ruano.dev.utng.smarthealthmonitor.data.models.SmartHealthRepository.actualizarFC(120)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("TEST: Simular FC 120")
                     }
                 }
+
 
                 // ── Lista del historial ───────────────────
                 items(historial, key = { it.id }) { lectura ->

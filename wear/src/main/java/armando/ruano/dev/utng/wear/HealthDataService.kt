@@ -1,61 +1,64 @@
 package armando.ruano.dev.utng.wear
 
 import android.content.Context
+import android.util.Log
 import androidx.health.services.client.HealthServices
 import androidx.health.services.client.PassiveListenerService
 import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataType
 import androidx.health.services.client.data.PassiveListenerConfig
 import androidx.health.services.client.data.SampleDataPoint
-import androidx.health.services.client.data.DataType.Companion.HEART_RATE_BPM
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.guava.await
+import kotlinx.coroutines.runBlocking
 
 class HealthDataService : PassiveListenerService() {
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private lateinit var wearDataSender: WearDataSender
+    private lateinit var sender: WearDataSender
 
     override fun onCreate() {
         super.onCreate()
-        wearDataSender = WearDataSender(this)  // S6: MessageClient
+        sender = WearDataSender(applicationContext)
+        Log.d("HEALTH_TEST", "Service onCreate")
     }
 
     override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
-        val fcDataPoints = dataPoints.getData(DataType.HEART_RATE_BPM)
+        val puntos = dataPoints.getData(DataType.HEART_RATE_BPM)
+            .filterIsInstance<SampleDataPoint<Double>>()
 
-        fcDataPoints.forEach { dataPoint ->
-            if (dataPoint is SampleDataPoint<Double>) {
-                val bpm = dataPoint.value.toInt()
-                scope.launch { wearDataSender.enviarFC(bpm) }
+        if (puntos.isEmpty()) return
+
+        val bpm = puntos.last().value.toInt()
+        Log.d("HEALTH_TEST", "FC recibida: $bpm — enviando síncronamente")
+
+        // runBlocking bloquea el hilo hasta que el envío termina,
+        // ANTES de que el sistema destruya el Service
+        runBlocking {
+            try {
+                sender.enviarFC(bpm)
+                Log.d("HEALTH_TEST", "Envío completado: $bpm")
+            } catch (e: Exception) {
+                Log.e("HEALTH_TEST", "Error enviando: ${e.message}", e)
             }
         }
     }
 
     override fun onDestroy() {
+        Log.d("HEALTH_TEST", "Service onDestroy")
         super.onDestroy()
-        scope.cancel()
     }
 
     companion object {
         suspend fun registrar(context: Context) {
-            val hsClient = HealthServices.getClient(context)
-            val passiveClient = hsClient.passiveMonitoringClient
-
             val config = PassiveListenerConfig.builder()
                 .setDataTypes(setOf(DataType.HEART_RATE_BPM))
-                .setShouldUserActivityInfoBeRequested(true)
                 .build()
 
-            passiveClient.setPassiveListenerServiceAsync(
-                HealthDataService::class.java,
-                config
-            ).await()
+            HealthServices.getClient(context)
+                .passiveMonitoringClient
+                .setPassiveListenerServiceAsync(HealthDataService::class.java, config)
+                .await()
+
+            Log.d("HEALTH_TEST", "PassiveListener registrado OK")
         }
     }
 }
