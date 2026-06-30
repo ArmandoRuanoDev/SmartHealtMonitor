@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import armando.ruano.dev.utng.smarthealthmonitor.data.models.LecturaFC
+import armando.ruano.dev.utng.smarthealthmonitor.data.db.LecturaFC
 
 @Composable
 fun FilaHistorial(

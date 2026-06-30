@@ -1,8 +1,17 @@
-package armando.ruano.dev.utng.smarthealthmonitor.data.models
+package armando.ruano.dev.utng.smarthealthmonitor.data
 
+import android.content.Context
+import armando.ruano.dev.utng.smarthealthmonitor.data.db.LecturaFC
+import armando.ruano.dev.utng.smarthealthmonitor.data.db.LecturaFCDao
+import armando.ruano.dev.utng.smarthealthmonitor.data.db.SmartHealthDB
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * Repositorio singleton que centraliza los datos de salud.
@@ -10,20 +19,28 @@ import kotlinx.coroutines.flow.asStateFlow
  * El ViewModel lee de aquí.
  */
 object SmartHealthRepository {
-
-    // FC actual del wearable (bpm)
     private val _fcFlow = MutableStateFlow(0)
     val fcFlow: StateFlow<Int> = _fcFlow.asStateFlow()
 
-    // Pasos del día actual
     private val _pasosFlow = MutableStateFlow(0)
     val pasosFlow: StateFlow<Int> = _pasosFlow.asStateFlow()
-
-    fun actualizarFC(bpm: Int) {
-        _fcFlow.value = bpm
-    }
 
     fun actualizarPasos(pasos: Int) {
         _pasosFlow.value = pasos
     }
+    private var dao: LecturaFCDao? = null
+
+    fun init(context: Context) {
+        dao = SmartHealthDB.getDatabase(context).lecturaDao()
+    }
+
+    suspend fun actualizarFC(bpm: Int) {
+        _fcFlow.value = bpm
+        val horaActual = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+        dao?.insertar(LecturaFC(valorBpm = bpm, hora = horaActual, esNormal = bpm in 60..100))
+    }
+
+    // Flow del historial desde Room
+    fun obtenerHistorial(): Flow<List<LecturaFC>> =
+        dao?.obtenerUltimas() ?: emptyFlow()
 }
