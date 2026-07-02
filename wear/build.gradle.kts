@@ -40,6 +40,7 @@ android {
 
 dependencies {
     // Compose for Wear OS
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("androidx.wear.compose:compose-material:1.3.1")
     implementation("androidx.wear.compose:compose-foundation:1.3.1")
     implementation("androidx.wear.compose:compose-navigation:1.3.1")

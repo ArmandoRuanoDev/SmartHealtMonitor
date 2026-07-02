@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import armando.ruano.dev.utng.wear.presentation.SmartHealthWearNavGraph
 import armando.ruano.dev.utng.wear.presentation.WearDashboardScreen
 import armando.ruano.dev.utng.wear.presentation.theme.SmartHealthWearTheme
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +46,7 @@ class WearMainActivity : ComponentActivity() {
         setContent {
             SmartHealthWearTheme {
                 // TODO Ej.02: reemplazar con WearNavGraph
-                WearDashboardScreen()
+                SmartHealthWearNavGraph()
             }
         }
 
