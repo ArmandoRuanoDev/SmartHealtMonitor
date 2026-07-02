@@ -46,10 +46,9 @@ dependencies {
     // Horologist (utilidades Wear OS de Google)
     implementation("com.google.android.horologist:horologist-compose-layout:0.6.17")
     implementation("com.google.android.horologist:horologist-compose-material:0.6.17")
-    // Compartir Repository con el módulo app
-    //implementation(project(":app"))
 
     implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(libs.androidx.runtime)
     implementation(libs.compose.material)
     implementation("org.tensorflow:tensorflow-lite:2.17.0")
     implementation(libs.androidx.compose.foundation)
