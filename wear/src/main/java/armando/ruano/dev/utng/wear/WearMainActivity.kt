@@ -8,7 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
+import armando.ruano.dev.utng.wear.presentation.SmartHealthWearNavGraph
+import armando.ruano.dev.utng.wear.presentation.WearDashboardScreen
+import armando.ruano.dev.utng.wear.presentation.theme.SmartHealthWearTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -42,10 +44,12 @@ class WearMainActivity : ComponentActivity() {
 
         // UI mínima para que la Activity no sea destruida
         setContent {
-            androidx.wear.compose.material.MaterialTheme {
-                androidx.wear.compose.material.Text("SmartHealth")
+            SmartHealthWearTheme {
+                // TODO Ej.02: reemplazar con WearNavGraph
+                SmartHealthWearNavGraph()
             }
         }
+
 
         val permisos = arrayOf(
             Manifest.permission.BODY_SENSORS,
