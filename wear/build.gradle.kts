@@ -39,6 +39,11 @@ android {
 }
 
 dependencies {
+    // Jetpack WatchFace API
+    implementation("androidx.wear.watchface:watchface:1.2.1")
+    implementation("androidx.wear.watchface:watchface-complications-rendering:1.2.1")
+    implementation("androidx.wear.watchface:watchface-style:1.2.1")
+
     // Compose for Wear OS
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("androidx.wear.compose:compose-material:1.3.1")
