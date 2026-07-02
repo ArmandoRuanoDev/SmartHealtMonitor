@@ -39,6 +39,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import armando.ruano.dev.utng.smarthealthmonitor.data.SmartHealthRepository
+import armando.ruano.dev.utng.smarthealthmonitor.data.db.LecturaFC
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

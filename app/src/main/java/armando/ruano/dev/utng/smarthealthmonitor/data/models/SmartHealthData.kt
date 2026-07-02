@@ -1,5 +1,7 @@
 package armando.ruano.dev.utng.smarthealthmonitor.data.models
 
+import armando.ruano.dev.utng.smarthealthmonitor.data.db.LecturaFC as LecturaFCEntity
+
 data class LecturaFC(
     val id: Int,
     val valorBpm: Int,
@@ -18,6 +20,7 @@ object MockData {
         LecturaFC(6, 80, "08:30"),
         LecturaFC(7, 74, "08:00")
     )
-    var fcActual = 78
+    var fcActual = 67
     var pasosActual = 4250
+
 }
