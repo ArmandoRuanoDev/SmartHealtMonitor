@@ -20,7 +20,7 @@ object MockData {
         LecturaFC(6, 80, "08:30"),
         LecturaFC(7, 74, "08:00")
     )
-    var fcActual = 67
+    var fcActual = 110
     var pasosActual = 4250
 
 }
