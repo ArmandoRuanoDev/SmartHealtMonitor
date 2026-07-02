@@ -16,6 +16,13 @@ class WearListenerService : WearableListenerService() {
         private const val TAG = "WearListener"
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        // Garantizar inicialización aunque la app no esté abierta
+        SmartHealthRepository.init(applicationContext)
+        Log.d(TAG, "WearListenerService onCreate — repositorio listo")
+    }
+
     override fun onMessageReceived(messageEvent: MessageEvent) {
         val data = String(messageEvent.data)
         val path = messageEvent.path
@@ -24,11 +31,13 @@ class WearListenerService : WearableListenerService() {
         when (path) {
             PATH_FC -> {
                 val bpm = data.toIntOrNull() ?: return
+                Log.d(TAG, "Actualizando FC: $bpm")
                 scope.launch { SmartHealthRepository.actualizarFC(bpm) }
             }
             PATH_PASOS -> {
                 val pasos = data.toIntOrNull() ?: return
-                // agrega actualizarPasos al repositorio, o usa actualizarFC si es temporal
+                Log.d(TAG, "Actualizando pasos: $pasos")
+                SmartHealthRepository.actualizarPasos(pasos)
             }
             else -> Log.w(TAG, "Path desconocido: $path")
         }

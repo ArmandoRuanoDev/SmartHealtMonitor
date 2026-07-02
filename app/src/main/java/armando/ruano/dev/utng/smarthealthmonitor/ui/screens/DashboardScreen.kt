@@ -32,7 +32,14 @@ import armando.ruano.dev.utng.smarthealthmonitor.ui.components.FilaHistorial
 import armando.ruano.dev.utng.smarthealthmonitor.ui.components.TarjetaDato
 import armando.ruano.dev.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
 import armando.ruano.dev.utng.smarthealthmonitor.ui.viewModel.DashboardViewModel
-import armando.ruano.dev.utng.smarthealthmonitor.BuildConfig
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,9 +49,32 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = viewModel()  // ← inyección automática
 ) {
     // collectAsState() convierte StateFlow en State de Compose
-    val fc     by viewModel.fc.collectAsState()
-    val pasos  by viewModel.pasos.collectAsState()
+    val fc       by viewModel.fc.collectAsState()
+    val pasos    by viewModel.pasos.collectAsState()
     val historial by viewModel.historial.collectAsState()
+
+    // ── Estado del diálogo y Snackbar ──────────────────────
+    var mostrarAlerta by remember { mutableStateOf(false) }
+    val snackbarHost  = remember { SnackbarHostState() }
+    val scope         = rememberCoroutineScope()
+
+    // ── Diálogo condicional ────────────────────────────────
+    if (mostrarAlerta) {
+        AlertaScreen(
+            fc          = fc,
+            onDismiss   = { mostrarAlerta = false },
+            onConfirmar = {
+                mostrarAlerta = false
+                scope.launch {
+                    snackbarHost.showSnackbar(
+                        message  = "✅ Alerta enviada a tus contactos de emergencia",
+                        duration = SnackbarDuration.Long
+                    )
+                }
+            }
+        )
+    }
+
 
     SmartHealthMonitorTheme {
         Scaffold(
@@ -64,7 +94,7 @@ fun DashboardScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick       = onAlertClick,
+                    onClick       = { mostrarAlerta = true },
                     containerColor = MaterialTheme.colorScheme.error
                 ) {
                     Icon(
