@@ -2,12 +2,20 @@ package ruano.dev.tv
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import ruano.dev.tv.data.db.LecturaFC
 import ruano.dev.tv.data.models.MockData
 
 class MainFragment : BrowseSupportFragment() {
+
+    private val viewModel: TvViewModel by viewModels()
+    private lateinit var histAdapter: ArrayObjectAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -21,7 +29,21 @@ class MainFragment : BrowseSupportFragment() {
         brandColor = resources.getColor(R.color.sh_primary, null)
 
         cargarFilas()
+        observarDatos()
     }
+
+    private fun observarDatos() {
+        // Observar historial de Room y actualizar la fila
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.historial.collect { lecturas ->
+                    histAdapter.clear()
+                    lecturas.forEach { histAdapter.add(it) }
+                }
+            }
+        }
+    }
+
 
     private fun cargarFilas() {
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
