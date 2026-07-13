@@ -29,8 +29,8 @@ class MainFragment : BrowseSupportFragment() {
         // ── Fila 1: Estado actual (FC + Pasos) ───────────
         val estadoAdapter = ArrayObjectAdapter(FCCardPresenter())
         // Datos simulados — en Ej.03 vendrán de Room
-        estadoAdapter.add(LecturaFC(id = 0, valorBpm = 88, hora = "Ahora"))
-        estadoAdapter.add(LecturaFC(id=1, valorBpm=4250, hora="Pasos"))
+        estadoAdapter.add(LecturaFC(valorBpm = 88, hora = "Ahora"))
+        estadoAdapter.add(LecturaFC(valorBpm = 4250, hora = "Pasos"))
         rowsAdapter.add(ListRow(HeaderItem("Estado actual"), estadoAdapter))
 
         // ── Fila 2: Historial de FC ────────────────────
