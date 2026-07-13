@@ -44,6 +44,9 @@ dependencies {
     implementation("androidx.leanback:leanback:1.2.0")
     // Glide para cargar imágenes en las cards
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    val roomVersion = "2.7.2"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     // Compartir Room + Repository con módulo app
     //implementation(project(":app"))
     // ViewModel + Coroutines
