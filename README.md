@@ -1,6 +1,35 @@
 # SmartHealth Monitor
 ![Android CI](https://img.shields.io/badge/Android-API26+-green)
 ![Compose](https://img.shields.io/badge/Jetpack%20Compose-MD3-blue)
+
+## Arquitectura — SmartHealth Monitor
+ 
+```
+Sensor PPG (Wear OS)
+    │  Health Services API
+    ▼
+PassiveListenerService (wear)
+    │  MessageClient (BLE)
+    ▼
+WearListenerService (app)
+    │  SmartHealthRepository
+    ▼
+StateFlow<Int> (fcActual)  ──────────────────────────────────┐
+    │                                                        │
+    ▼                                                        ▼
+DashboardViewModel (app)              TvViewModel (tv)
+    │  collectAsState()                    │  collectAsState()
+    ▼                                        ▼
+DashboardScreen (Compose)          TvCatalogScreen (Compose TV)
+    └── CastButton ──► Chromecast (Remote Playback)
+ 
+Room DB (LecturaFC)  ◄──  Repository  ──►  Flow<List<LecturaFC>>
+                                                │
+                          ┌─────────────────────┴──────────┐
+                          ▼                                ▼
+               HistorialScreen (app)        TvCatalogScreen (tv)
+```
+
  
 Aplicación Android de monitoreo de salud personal en tiempo real.
 Desarrollada como proyecto integrador — UTNG 9° Cuatrimestre 2025.
